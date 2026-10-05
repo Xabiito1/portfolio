@@ -31,7 +31,7 @@ export default function OpengraphImage() {
               color: "#64748b",
             }}
           >
-            {hero.eyebrow}
+            {site.role}
           </div>
           <div
             style={{

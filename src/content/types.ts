@@ -20,12 +20,13 @@ export type Project = {
   /** Show on the home page under "Selected work". Keep it to 2–3 projects. */
   featured?: boolean;
   /**
-   * Placeholder entries are rendered so the layout can be reviewed, but they are
-   * marked noindex and left out of the sitemap. Remove the flag on real projects.
+   * Placeholder entries only fill the layout until real projects exist.
+   * They are not linked, get no /work/[slug] page and stay out of the sitemap.
    */
   placeholder?: boolean;
   cover: ContentImage;
-  caseStudy: {
+  /** Required for a project to get its own /work/[slug] page. */
+  caseStudy?: {
     overview: string;
     challenge: string;
     role: string;

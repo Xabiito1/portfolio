@@ -44,16 +44,18 @@ All content lives in `src/content`. There is no CMS.
 
 ## Adding a project
 
-1. Add screenshots to `src/content/images/<slug>/`. A 16:10 cover works best.
-2. Import them in `src/content/projects.ts` and add an entry following the `Project` type in `src/content/types.ts`.
+1. Add screenshots to `src/content/images/<slug>/`. A 4:3 or 16:10 cover works best.
+2. Import them in `src/content/projects.ts` and add an entry following the `Project` type in `src/content/types.ts`, including `caseStudy`.
 3. Set `featured: true` to show it on the home page (keep it to 2–3).
+
+Only real projects with a `caseStudy` get a `/work/[slug]` page. The current entries (`Project 01`, `Project 02`) are placeholders: they are not linked, have no page and stay out of the sitemap.
 
 Each case study has: overview, challenge, role, key features, technical implementation, screenshots and outcome. Keep them short and only describe what you actually did.
 
 ## Before publishing
 
-- [ ] Replace the two placeholder projects in `src/content/projects.ts` (they are marked `placeholder: true`, which keeps them out of the sitemap and adds `noindex`).
-- [ ] Replace the hero placeholder image in `src/content/site.ts`, or set `hero.image` to `null`.
+- [ ] Replace the placeholder projects in `src/content/projects.ts`.
+- [ ] Optional: add a photo in `hero.image` (`src/content/site.ts`).
 - [ ] Add the GitHub URL in `contact.github`.
 - [ ] Add the CV to `public/cv.pdf` and set `contact.cv` to `"/cv.pdf"`.
 - [ ] Set `NEXT_PUBLIC_SITE_URL`.

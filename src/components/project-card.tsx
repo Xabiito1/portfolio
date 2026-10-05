@@ -1,48 +1,56 @@
 import Image from "next/image";
 import Link from "next/link";
 import type { Project } from "@/content/types";
+import { hasCaseStudy } from "@/lib/projects";
 import { ArrowUpRight } from "./icons";
-import { TagList } from "./ui";
 
+/**
+ * Project preview: the screenshot does the work, text sits underneath without a box.
+ * Placeholders and projects without a case study are rendered without a link.
+ */
 export function ProjectCard({ project, headingLevel = "h3" }: { project: Project; headingLevel?: "h2" | "h3" }) {
   const Heading = headingLevel;
+  const linked = hasCaseStudy(project);
 
   return (
-    <article className="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-white transition-colors hover:border-line-strong has-[a:focus-visible]:outline-2 has-[a:focus-visible]:outline-offset-2 has-[a:focus-visible]:outline-accent">
-      <div className="relative aspect-[16/10] overflow-hidden border-b border-line bg-surface">
+    <article className="group relative">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-md bg-surface ring-1 ring-black/[0.04]">
         <Image
           src={project.cover.src}
           alt={project.cover.alt}
           fill
           placeholder="blur"
-          sizes="(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw"
-          className="object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.015] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          sizes="(min-width: 1280px) 580px, (min-width: 640px) 50vw, 100vw"
+          className={
+            linked
+              ? "object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.012] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+              : "object-cover object-top"
+          }
         />
       </div>
 
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <Heading className="text-lg font-semibold tracking-tight text-ink">
-              <Link
-                href={`/work/${project.slug}`}
-                className="after:absolute after:inset-0 focus-visible:outline-none"
-              >
-                {project.name}
-              </Link>
-            </Heading>
-            <p className="mt-1 text-sm leading-relaxed text-muted">{project.summary}</p>
-          </div>
-          <span
-            aria-hidden="true"
-            className="grid size-9 shrink-0 place-items-center rounded-full border border-line text-ink transition-colors group-hover:border-ink group-hover:bg-ink group-hover:text-white"
-          >
-            <ArrowUpRight />
-          </span>
-        </div>
-
-        <TagList items={project.stack} className="mt-5" />
+      <div className="mt-5 flex items-baseline justify-between gap-6">
+        <Heading className="text-lg font-medium tracking-[-0.01em] text-ink">
+          {linked ? (
+            <Link
+              href={`/work/${project.slug}`}
+              className="inline-flex items-center gap-1.5 after:absolute after:inset-0 after:rounded-md"
+            >
+              {project.name}
+              <ArrowUpRight className="text-muted transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-ink motion-reduce:transition-none" />
+            </Link>
+          ) : (
+            project.name
+          )}
+        </Heading>
+        {project.stack.length > 0 && (
+          <p className="truncate text-sm text-muted">
+            <span className="sr-only">Stack: </span>
+            {project.stack.join(" · ")}
+          </p>
+        )}
       </div>
+      <p className="mt-1.5 max-w-md text-[15px] leading-relaxed text-muted">{project.summary}</p>
     </article>
   );
 }

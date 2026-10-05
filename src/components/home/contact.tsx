@@ -1,75 +1,74 @@
-import { contact } from "@/content/site";
+import { contact, contactSection } from "@/content/site";
 import { CopyEmailButton } from "../copy-email-button";
-import { ArrowRight, ArrowUpRight, FileText, GitHub, LinkedIn, Mail } from "../icons";
+import { ArrowUpRight } from "../icons";
 import { Container, Eyebrow } from "../ui";
 
+type ContactLink = { label: string; value: string; href: string; external: boolean };
+
 export function Contact() {
-  const links = [
-    contact.linkedin && { label: "LinkedIn", href: contact.linkedin, icon: LinkedIn, external: true },
-    contact.github && { label: "GitHub", href: contact.github, icon: GitHub, external: true },
-    contact.cv && { label: "CV (PDF)", href: contact.cv, icon: FileText, external: false },
-  ].filter(isLink);
+  const links: ContactLink[] = [];
+  if (contact.linkedin) {
+    links.push({ label: "LinkedIn", value: displayUrl(contact.linkedin), href: contact.linkedin, external: true });
+  }
+  if (contact.github) {
+    links.push({ label: "GitHub", value: displayUrl(contact.github), href: contact.github, external: true });
+  }
+  if (contact.cv) {
+    links.push({ label: "CV", value: "Download PDF", href: contact.cv, external: false });
+  }
 
   return (
-    <section id="contact" aria-labelledby="contact-heading" className="scroll-mt-20 pt-10 pb-16 sm:pt-14 sm:pb-20">
+    <section id="contact" aria-labelledby="contact-heading" className="scroll-mt-16">
       <Container>
-        <div className="rounded-xl border border-line bg-paper p-6 sm:p-10">
-          <div className="flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <div className="max-w-lg">
-              <Eyebrow>Get in touch</Eyebrow>
-              <h2 id="contact-heading" className="mt-3 text-2xl font-semibold tracking-tight text-ink sm:text-3xl">
-                Open to new opportunities.
-              </h2>
-              <p className="mt-3 text-sm leading-relaxed text-ink-soft sm:text-base">
-                I&apos;m open to full-time roles and freelance work. If you think we could work together, send me an
-                email.
-              </p>
-            </div>
-            <a
-              href={`mailto:${contact.email}`}
-              className="group inline-flex h-11 shrink-0 items-center justify-center gap-2 self-start rounded-lg bg-ink px-5 text-sm font-medium text-white transition-colors hover:bg-black md:self-auto"
-            >
-              Send a message
-              <ArrowRight className="transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" />
-            </a>
-          </div>
+        <div className="border-t border-line pt-14 pb-20 lg:pt-20 lg:pb-28">
+          <h2
+            id="contact-heading"
+            className="text-4xl leading-[1.05] font-semibold tracking-[-0.035em] text-balance text-ink sm:text-5xl lg:text-[3.75rem]"
+          >
+            {contactSection.title}
+          </h2>
+          <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-soft">{contactSection.text}</p>
 
-          <ul className="mt-8 flex flex-col gap-3 border-t border-line pt-6 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
-            <li className="flex items-center gap-3">
-              <Mail width={18} height={18} className="text-muted" />
-              <a href={`mailto:${contact.email}`} className="text-sm text-ink underline-offset-4 hover:underline">
-                {contact.email}
-              </a>
-              <CopyEmailButton email={contact.email} />
-            </li>
-            {links.map(({ label, href, icon: Icon, external }) => (
-              <li key={label}>
+          <dl className="mt-12 grid gap-6 sm:grid-cols-2 lg:mt-16 lg:grid-cols-3 lg:gap-8">
+            <div className="border-t border-line pt-4">
+              <Eyebrow as="dt">Email</Eyebrow>
+              <dd className="mt-2 flex items-center gap-3">
                 <a
-                  href={href}
-                  className="group inline-flex items-center gap-3 text-sm text-ink underline-offset-4 hover:underline"
-                  {...(external ? { target: "_blank", rel: "noopener noreferrer" } : { download: "" })}
+                  href={`mailto:${contact.email}`}
+                  className="text-base break-all text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
                 >
-                  <Icon width={18} height={18} className="text-muted" />
-                  {label}
-                  {external && <ArrowUpRight className="text-muted" />}
-                  {external && <span className="sr-only">(opens in a new tab)</span>}
+                  {contact.email}
                 </a>
-              </li>
+                <CopyEmailButton email={contact.email} />
+              </dd>
+            </div>
+            {links.map((link) => (
+              <div key={link.label} className="border-t border-line pt-4">
+                <Eyebrow as="dt">{link.label}</Eyebrow>
+                <dd className="mt-2">
+                  <a
+                    href={link.href}
+                    className="group inline-flex items-center gap-1.5 text-base text-ink underline decoration-line-strong underline-offset-4 transition-colors hover:decoration-ink"
+                    {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : { download: "" })}
+                  >
+                    {link.value}
+                    {link.external && (
+                      <>
+                        <ArrowUpRight className="text-muted transition-colors group-hover:text-ink" />
+                        <span className="sr-only">(opens in a new tab)</span>
+                      </>
+                    )}
+                  </a>
+                </dd>
+              </div>
             ))}
-          </ul>
+          </dl>
         </div>
       </Container>
     </section>
   );
 }
 
-type ContactLink = {
-  label: string;
-  href: string;
-  icon: typeof Mail;
-  external: boolean;
-};
-
-function isLink(value: ContactLink | null | false | ""): value is ContactLink {
-  return Boolean(value);
+function displayUrl(url: string) {
+  return url.replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
 }

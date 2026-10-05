@@ -30,7 +30,7 @@ export function CopyEmailButton({ email }: { email: string }) {
       <button
         type="button"
         onClick={copy}
-        className="relative grid size-9 shrink-0 place-items-center rounded-md border border-line text-ink-soft transition-colors hover:border-ink hover:text-ink"
+        className="relative grid size-8 shrink-0 place-items-center rounded-md text-muted transition-colors hover:bg-surface hover:text-ink"
         aria-label="Copy email address"
       >
         <AnimatePresence mode="wait" initial={false}>

@@ -1,36 +1,42 @@
 import { experience } from "@/content/site";
 import { formatMonth } from "@/lib/format";
-import { HomeSection } from "./section";
+import { Section } from "../ui";
 
 export function Experience() {
   return (
-    <HomeSection id="experience" label="Experience">
-      <ol className="relative ml-[5px] border-l border-line">
+    <Section id="experience" title="Experience">
+      <ol className="divide-y divide-line">
         {experience.map((item) => (
-          <li key={`${item.role}-${item.start}`} className="relative pb-10 pl-7 last:pb-0 sm:pl-9">
-            <span
-              aria-hidden="true"
-              className="absolute top-[7px] -left-[5px] size-[9px] rounded-full bg-ink ring-4 ring-white"
-            />
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6">
-              <h3 className="font-semibold tracking-tight text-ink">{item.role}</h3>
-              <p className="order-first text-sm text-muted tabular-nums sm:order-none sm:shrink-0">
-                <time dateTime={item.start}>{formatMonth(item.start)}</time>
-                {" – "}
-                {item.end ? <time dateTime={item.end}>{formatMonth(item.end)}</time> : "Present"}
-              </p>
-            </div>
-            <p className="mt-1 text-sm text-ink-soft">
-              {item.company}
-              <span aria-hidden="true" className="mx-2 text-line-strong">
-                ·
-              </span>
-              {item.location}
+          <li
+            key={`${item.role}-${item.start}`}
+            className="grid gap-x-6 gap-y-2 py-7 first:pt-1 last:pb-0 sm:grid-cols-[9.5rem_minmax(0,1fr)]"
+          >
+            <p className="flex items-center gap-1.5 self-start text-sm whitespace-nowrap text-muted tabular-nums sm:pt-1">
+              <time dateTime={item.start}>{formatMonth(item.start)}</time>
+              <span aria-hidden="true">–</span>
+              {item.end ? (
+                <time dateTime={item.end}>{formatMonth(item.end)}</time>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 text-ink">
+                  Present
+                  <span aria-hidden="true" className="size-1.5 rounded-full bg-accent" />
+                </span>
+              )}
             </p>
-            <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">{item.description}</p>
+            <div>
+              <h3 className="text-lg font-medium tracking-[-0.01em] text-ink">{item.role}</h3>
+              <p className="mt-0.5 text-[15px] text-ink-soft">
+                {item.company}
+                <span aria-hidden="true" className="mx-2 text-line-strong">
+                  /
+                </span>
+                <span className="text-muted">{item.location}</span>
+              </p>
+              <p className="mt-3 max-w-xl text-[15px] leading-relaxed text-muted">{item.description}</p>
+            </div>
           </li>
         ))}
       </ol>
-    </HomeSection>
+    </Section>
   );
 }

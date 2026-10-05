@@ -2,8 +2,11 @@ import Link from "next/link";
 import { nav, site } from "@/content/site";
 import { Container } from "./ui";
 import { MobileNav } from "./mobile-nav";
+import { visibleNav } from "@/lib/projects";
 
 export function SiteHeader() {
+  const items = visibleNav(nav);
+
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white">
       <Container className="relative flex h-16 items-center justify-between">
@@ -17,7 +20,7 @@ export function SiteHeader() {
 
         <nav aria-label="Main" className="hidden md:block">
           <ul className="flex items-center gap-8">
-            {nav.map((item) => (
+            {items.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
@@ -30,7 +33,7 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <MobileNav items={nav} />
+        <MobileNav items={items} />
       </Container>
     </header>
   );

@@ -4,20 +4,21 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { ArrowLeft, ArrowRight, ArrowUpRight, Grid } from "@/components/icons";
-import { Container, TagList } from "@/components/ui";
-import { getAdjacentProjects, getAllProjects, getProject } from "@/lib/projects";
+import { Container } from "@/components/ui";
+import { getAdjacentCaseStudies, getCaseStudies, getCaseStudy } from "@/lib/projects";
 
 type Props = { params: Promise<{ slug: string }> };
 
+// Only real projects with a case study get a page. Placeholders never do.
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getAllProjects().map((project) => ({ slug: project.slug }));
+  return getCaseStudies().map((project) => ({ slug: project.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = getCaseStudy(slug);
   if (!project) return {};
 
   const url = `/work/${project.slug}`;
@@ -25,7 +26,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: project.name,
     description: project.summary,
     alternates: { canonical: url },
-    robots: project.placeholder ? { index: false, follow: true } : undefined,
     openGraph: {
       type: "article",
       url,
@@ -45,14 +45,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const project = getProject(slug);
+  const project = getCaseStudy(slug);
   if (!project) notFound();
 
   const { caseStudy } = project;
-  const adjacent = getAdjacentProjects(project.slug);
+  const adjacent = getAdjacentCaseStudies(project.slug);
 
   return (
-    <article className="pt-8 pb-16 sm:pt-12 sm:pb-24">
+    <article className="pt-10 pb-20 sm:pt-14 lg:pb-28">
       <Container>
         <Link
           href="/work"
@@ -64,9 +64,16 @@ export default async function ProjectPage({ params }: Props) {
 
         <header className="mt-8 grid items-center gap-10 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14">
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-ink sm:text-5xl">{project.name}</h1>
-            <p className="mt-3 max-w-sm text-base leading-relaxed text-ink-soft">{project.summary}</p>
-            <TagList items={project.stack} className="mt-6" />
+            <h1 className="text-4xl font-semibold tracking-[-0.035em] text-ink sm:text-5xl lg:text-6xl">
+              {project.name}
+            </h1>
+            <p className="mt-4 max-w-md text-lg leading-relaxed text-ink-soft">{project.summary}</p>
+            {project.stack.length > 0 && (
+              <p className="mt-6 text-sm text-muted">
+                <span className="sr-only">Stack: </span>
+                {project.stack.join(" · ")}
+              </p>
+            )}
 
             {(project.year || project.links?.live || project.links?.repo) && (
               <ul className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm">
@@ -85,14 +92,14 @@ export default async function ProjectPage({ params }: Props) {
             )}
           </div>
 
-          <div className="overflow-hidden rounded-xl border border-line bg-surface">
+          <div className="overflow-hidden rounded-md bg-surface ring-1 ring-black/[0.04]">
             <Image
               src={project.cover.src}
               alt={project.cover.alt}
               placeholder="blur"
               loading="eager"
               fetchPriority="high"
-              sizes="(min-width: 1152px) 620px, (min-width: 1024px) 55vw, 100vw"
+              sizes="(min-width: 1280px) 680px, (min-width: 1024px) 55vw, 100vw"
               className="h-auto w-full"
             />
           </div>
@@ -120,12 +127,12 @@ export default async function ProjectPage({ params }: Props) {
               <div className="grid gap-5 sm:grid-cols-2 sm:gap-6">
                 {caseStudy.screenshots.map((shot, i) => (
                   <figure key={i}>
-                    <div className="overflow-hidden rounded-lg border border-line bg-surface">
+                    <div className="overflow-hidden rounded-md bg-surface ring-1 ring-black/[0.04]">
                       <Image
                         src={shot.src}
                         alt={shot.alt}
                         placeholder="blur"
-                        sizes="(min-width: 1152px) 540px, (min-width: 640px) 50vw, 100vw"
+                        sizes="(min-width: 1280px) 580px, (min-width: 640px) 50vw, 100vw"
                         className="h-auto w-full"
                       />
                     </div>
@@ -203,14 +210,19 @@ function CaseSection({
       className={
         wide
           ? "border-b border-line py-8 sm:py-10"
-          : "grid gap-3 border-b border-line py-8 sm:grid-cols-[220px_minmax(0,1fr)] sm:gap-10 sm:py-10"
+          : "grid gap-3 border-b border-line py-8 lg:grid-cols-12 lg:gap-x-8 lg:py-10"
       }
     >
-      <h2 id={id} className={`flex items-baseline gap-3 font-semibold tracking-tight text-ink ${wide ? "mb-6" : ""}`}>
+      <h2
+        id={id}
+        className={`flex items-baseline gap-3 font-medium text-ink ${wide ? "mb-6" : "lg:col-span-4"}`}
+      >
         <span className="font-mono text-xs font-normal text-muted">{number}.</span>
         {title}
       </h2>
-      <div className={wide ? undefined : "max-w-2xl text-[15px] leading-relaxed text-ink-soft"}>{children}</div>
+      <div className={wide ? undefined : "max-w-2xl text-[15px] leading-relaxed text-ink-soft lg:col-span-8"}>
+        {children}
+      </div>
     </section>
   );
 }

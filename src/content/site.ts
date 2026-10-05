@@ -1,5 +1,4 @@
 import type { ContentImage, ExperienceItem } from "./types";
-import heroImage from "./images/placeholder/hero.png";
 
 export const site = {
   // TODO: add full name if you want it in titles and structured data.
@@ -11,6 +10,11 @@ export const site = {
   description:
     "Frontend developer building web applications with React, Next.js, TypeScript and Django, with a focus on clear interfaces and real-world products.",
 } as const;
+
+export const contactSection = {
+  title: "Open to new opportunities.",
+  text: "If you'd like to work together, feel free to get in touch.",
+};
 
 export const contact: {
   email: string;
@@ -28,40 +32,41 @@ export const contact: {
 
 export const nav = [
   { label: "Work", href: "/#work" },
-  { label: "About", href: "/#about" },
   { label: "Experience", href: "/#experience" },
+  { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ] as const;
 
 export const hero: {
-  eyebrow: string;
   title: string;
   intro: string;
+  facts: { label: string; value: string }[];
+  /** Optional photo next to the text. Leave null until there is a real one. */
   image: ContentImage | null;
 } = {
-  eyebrow: "Frontend developer",
   title: "Frontend developer building clean, usable web products.",
   intro:
-    "I build web applications with React, Next.js, TypeScript and Django, with a focus on clear interfaces and real-world products.",
-  // TODO: replace with a real photo (you, your desk, A Coruña…) or set to null to hide it.
-  image: { src: heroImage, alt: "" },
+    "I build web applications with React, Next.js, TypeScript and Django, focusing on clear interfaces and products that are easy to use.",
+  facts: [
+    { label: "Currently", value: "Product Developer at Nubico Tech" },
+    { label: "Based in", value: "A Coruña, Spain · Remote" },
+    { label: "Experience", value: "2+ years" },
+  ],
+  image: null,
 };
 
 export const principles = [
   {
-    icon: "understand",
     title: "Understand the problem",
-    text: "Before building anything, I try to understand what the product needs: who uses it, what they are trying to do and what the constraints are.",
+    text: "Understand the user, requirements and constraints before building.",
   },
   {
-    icon: "build",
     title: "Build clean solutions",
-    text: "Simple interfaces and simple code. Easy to use, easy to maintain and able to grow with the product.",
+    text: "Simple interfaces and maintainable code without unnecessary complexity.",
   },
   {
-    icon: "endToEnd",
     title: "Work end to end",
-    text: "Most of my work is frontend, but I am comfortable integrating APIs and working on the Django backend when needed.",
+    text: "Comfortable working from frontend to APIs and Django when needed.",
   },
 ] as const;
 
@@ -75,20 +80,20 @@ export const stack = [
     items: ["Django", "Django REST Framework", "Python"],
   },
   {
-    label: "Other",
-    items: ["PostgreSQL", "MariaDB", "Redis", "Celery", "Docker", "Git", "GitHub", "Figma"],
+    label: "Tools & Data",
+    items: ["PostgreSQL", "MariaDB", "Redis", "Docker", "Celery", "Git", "GitHub", "Figma"],
   },
 ] as const;
 
 /** Most recent first. */
 export const experience: ExperienceItem[] = [
   {
-    role: "Product Developer · Frontend & UX/UI",
+    role: "Product Developer",
     company: "Nubico Tech",
     location: "Remote · A Coruña",
     start: "2025-01",
     description:
-      "Web product development, mainly on the frontend, interfaces and UX/UI, plus integration with the backend.",
+      "Web product development, mainly frontend: interfaces, UX/UI and integration with the backend.",
   },
   {
     role: "UX/UI Designer",

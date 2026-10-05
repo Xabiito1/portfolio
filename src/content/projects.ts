@@ -1,63 +1,32 @@
 import type { Project } from "./types";
 
-import cover from "./images/placeholder/project-cover.png";
-import shot1 from "./images/placeholder/screenshot-1.png";
-import shot2 from "./images/placeholder/screenshot-2.png";
-import shot3 from "./images/placeholder/screenshot-3.png";
-import shot4 from "./images/placeholder/screenshot-4.png";
+import placeholderCover from "./images/placeholder/project-cover.png";
 
 /**
  * Projects shown on the site, in display order.
  *
- * The two entries below are neutral placeholders so the layout can be reviewed.
- * Replace them with real projects (and real screenshots) before publishing.
+ * There are no public projects yet. The entries below are neutral placeholders
+ * that only fill the layout: they are not linked, get no case study page and
+ * stay out of the sitemap. Replace them with real projects when they can be shown.
  * Only write what you actually did: no invented clients, metrics or results.
  *
  * To add a project:
- * 1. Put screenshots in src/content/images/<slug>/ (16:10 works best for the cover).
- * 2. Import them here and add an entry. Remove `placeholder: true`.
+ * 1. Put screenshots in src/content/images/<slug>/ (4:3 or 16:10 works best for the cover).
+ * 2. Import them here and add an entry with a `caseStudy` (see types.ts).
+ * 3. Set `featured: true` to show it on the home page (2–3 projects).
  */
 
-const placeholderScreens = [
-  { src: shot1, alt: "Placeholder screenshot", caption: "Screenshot caption" },
-  { src: shot2, alt: "Placeholder screenshot", caption: "Screenshot caption" },
-  { src: shot3, alt: "Placeholder screenshot", caption: "Screenshot caption" },
-  { src: shot4, alt: "Placeholder screenshot", caption: "Screenshot caption" },
-];
-
-const placeholderCaseStudy: Project["caseStudy"] = {
-  overview: "A short description of what the product is and who it is for.",
-  challenge: "What problem needed solving, and any constraints that shaped the solution.",
-  role: "What you were responsible for and who you worked with.",
-  features: ["Key feature", "Key feature", "Key feature", "Key feature"],
-  implementation: [
-    "How the frontend is structured.",
-    "How data is fetched and managed.",
-    "How it connects to the backend or APIs.",
-  ],
-  screenshots: placeholderScreens,
-  outcome: "Where the project stands today. Only facts you can stand behind.",
+const placeholder = (n: number): Project => {
+  const id = String(n).padStart(2, "0");
+  return {
+    slug: `project-${id}`,
+    name: `Project ${id}`,
+    summary: "Details coming soon.",
+    stack: [],
+    featured: true,
+    placeholder: true,
+    cover: { src: placeholderCover, alt: "" },
+  };
 };
 
-export const projects: Project[] = [
-  {
-    slug: "project-one",
-    name: "Project one",
-    summary: "Short description of the project.",
-    stack: ["Technology", "Technology", "Technology"],
-    featured: true,
-    placeholder: true,
-    cover: { src: cover, alt: "Placeholder project screenshot" },
-    caseStudy: placeholderCaseStudy,
-  },
-  {
-    slug: "project-two",
-    name: "Project two",
-    summary: "Short description of the project.",
-    stack: ["Technology", "Technology", "Technology"],
-    featured: true,
-    placeholder: true,
-    cover: { src: cover, alt: "Placeholder project screenshot" },
-    caseStudy: placeholderCaseStudy,
-  },
-];
+export const projects: Project[] = [placeholder(1), placeholder(2)];

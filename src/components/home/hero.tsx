@@ -1,37 +1,48 @@
 import Image from "next/image";
 import { hero } from "@/content/site";
+import { showWork } from "@/lib/projects";
 import { ArrowRight } from "../icons";
-import { ButtonLink, Container, Eyebrow, cx } from "../ui";
+import { ButtonLink, Container, Eyebrow } from "../ui";
 
 export function Hero() {
   return (
-    <section aria-labelledby="hero-title" className="pt-10 pb-10 sm:pt-16 sm:pb-14">
-      <Container
-        className={cx("grid items-center gap-10 lg:gap-16", hero.image && "lg:grid-cols-[minmax(0,1fr)_minmax(0,0.9fr)]")}
-      >
-        <div className="max-w-xl">
-          <Eyebrow>{hero.eyebrow}</Eyebrow>
-          <h1
-            id="hero-title"
-            className="mt-4 text-[2.375rem] leading-[1.08] font-bold tracking-tight text-balance text-ink sm:text-5xl lg:text-[3.25rem]"
-          >
-            {hero.title}
-          </h1>
-          <p className="mt-5 max-w-lg text-base leading-relaxed text-ink-soft sm:text-lg">{hero.intro}</p>
+    <section aria-labelledby="hero-title" className="pt-14 pb-16 sm:pt-20 lg:pt-28 lg:pb-24">
+      <Container>
+        <h1
+          id="hero-title"
+          className="max-w-5xl text-[2.375rem] leading-[1.05] font-semibold tracking-[-0.035em] text-balance text-ink sm:text-6xl lg:text-[5rem] lg:leading-[1.02]"
+        >
+          {hero.title}
+        </h1>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink href="/#work">
-              View my work
-              <ArrowRight className="transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" />
-            </ButtonLink>
-            <ButtonLink href="/#contact" variant="secondary">
-              Get in touch
-            </ButtonLink>
+        <div className="mt-8 grid gap-10 lg:mt-12 lg:grid-cols-12 lg:gap-x-8">
+          <div className="lg:col-span-7">
+            <p className="max-w-xl text-lg leading-relaxed text-ink-soft lg:text-xl lg:leading-relaxed">{hero.intro}</p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <ButtonLink href={showWork ? "/#work" : "/#experience"}>
+                {showWork ? "View my work" : "View experience"}
+                <ArrowRight className="transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none" />
+              </ButtonLink>
+              <ButtonLink href="/#contact" variant="secondary">
+                Get in touch
+              </ButtonLink>
+            </div>
           </div>
+
+          {hero.facts.length > 0 && (
+            <dl className="grid content-end gap-5 sm:grid-cols-3 lg:col-span-4 lg:col-start-9 lg:grid-cols-1">
+              {hero.facts.map((fact) => (
+                <div key={fact.label} className="border-t border-line pt-3">
+                  <Eyebrow as="dt">{fact.label}</Eyebrow>
+                  <dd className="mt-1.5 text-[15px] text-ink">{fact.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
         </div>
 
         {hero.image && (
-          <div className="relative aspect-[16/10] overflow-hidden rounded-xl lg:aspect-[4/3] border border-line bg-surface">
+          <div className="relative mt-14 aspect-[21/9] overflow-hidden rounded-md bg-surface lg:mt-20">
             <Image
               src={hero.image.src}
               alt={hero.image.alt}
@@ -39,7 +50,7 @@ export function Hero() {
               placeholder="blur"
               loading="eager"
               fetchPriority="high"
-              sizes="(min-width: 1152px) 500px, (min-width: 1024px) 45vw, 100vw"
+              sizes="(min-width: 1280px) 1184px, 100vw"
               className="object-cover"
             />
           </div>
